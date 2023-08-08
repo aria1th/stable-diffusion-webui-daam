@@ -6,7 +6,11 @@ import random
 import re
 
 from PIL import Image, ImageFont, ImageDraw
-from fonts.ttf import Roboto
+try:
+    from fonts.ttf import Roboto
+    has_roboto = True
+except (ImportError, ModuleNotFoundError):
+    has_roboto = False
 import matplotlib.pyplot as plt
 from matplotlib import cm
 import numpy as np
@@ -44,7 +48,10 @@ def _write_on_image(img, caption, font_size = 32):
     margin=2
     fontsize=font_size
     draw = ImageDraw.Draw(img)
-    font = ImageFont.truetype(Roboto, fontsize)
+    if has_roboto:
+        font = ImageFont.truetype(Roboto, fontsize)
+    else:
+        font = ImageFont.load_default()
     text_height=iy-60
     tx = draw.textbbox((0,0),caption,font)
     draw.text((int((ix-tx[2])/2),text_height+margin),caption,(0,0,0),font=font)
